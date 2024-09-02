@@ -22,7 +22,7 @@ public class User {
     private Double peso;
 
     private Double gastoBasal;
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "user")
     private List<Consumption> consumptions;
 
     public Double getGastoBasal() {
