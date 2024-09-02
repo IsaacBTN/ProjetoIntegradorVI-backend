@@ -33,26 +33,34 @@ public class User {
         return sexo;
     }
 
-    public void setGastoBasal(Double gastoBasal) {
-        this.gastoBasal = gastoBasal;
+    public void setPeso(Double peso) {
+        this.peso = peso;
+        updateGastoBasal();
     }
 
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
-    public int getIdade() {
-        return idade;
+    public void setAltura(Double altura) {
+        this.altura = altura;
+        updateGastoBasal();
     }
 
     public void setIdade(int idade) {
         this.idade = idade;
+        updateGastoBasal();
     }
 
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+        updateGastoBasal();
+    }
 
-    public double calcBasal(double peso, double altura, int idade, String sexo) {
+    private void updateGastoBasal() {
+        if (peso != null && altura != null && idade > 0 && sexo != null && !sexo.isEmpty()) {
+            this.gastoBasal = calcBasal(peso, altura, idade, sexo);
+        }
+    }
+
+    private double calcBasal(double peso, double altura, int idade, String sexo) {
         double gastoBasal;
-
         if (sexo.equalsIgnoreCase("masculino")) {
             gastoBasal = (10 * peso) + (6.25 * altura) - (5 * idade) + 5;
         } else if (sexo.equalsIgnoreCase("feminino")) {
@@ -60,25 +68,20 @@ public class User {
         } else {
             throw new IllegalArgumentException("Sexo deve ser 'masculino' ou 'feminino'");
         }
-
         return gastoBasal;
     }
+
 
     public Double getAltura() {
         return altura;
     }
 
-    public void setAltura(Double altura) {
-        this.altura = altura;
-    }
+
 
     public Double getPeso() {
         return peso;
     }
 
-    public void setPeso(Double peso) {
-        this.peso = peso;
-    }
 
     public List<Consumption> getConsumptions() {
         return consumptions;

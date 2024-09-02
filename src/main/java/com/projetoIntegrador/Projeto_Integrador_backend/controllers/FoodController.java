@@ -24,8 +24,8 @@ public class FoodController {
         return foodService.getFoodById(id);
     }
 
-    @PostMapping("/{id}")
-    public Food addFood (@PathVariable Food food){
+    @PostMapping
+    public Food addFood (@RequestBody Food food){
         return foodService.addFood(food);
     }
 

@@ -30,6 +30,10 @@ public class ConsumptionService {
         return consumptionRepository.findAll();
     }
 
+    public List<Consumption> getConsumptionsByUserId(Long userId) {
+        return consumptionRepository.findByUserId(userId);
+    }
+
     public Optional<Consumption> getConsumptionById(Long id){
         return consumptionRepository.findById(id);
     }
@@ -56,6 +60,7 @@ public class ConsumptionService {
     public Consumption saveConsumption (Consumption consumption){
         return consumptionRepository.save(consumption);
     }
+
 
     public Consumption updateConsumption(Long id, Consumption updatedConsumption) {
         return consumptionRepository.findById(id)

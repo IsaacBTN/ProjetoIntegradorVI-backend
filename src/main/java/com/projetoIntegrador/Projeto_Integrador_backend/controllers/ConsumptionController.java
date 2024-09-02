@@ -3,6 +3,7 @@ package com.projetoIntegrador.Projeto_Integrador_backend.controllers;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Consumption;
 import com.projetoIntegrador.Projeto_Integrador_backend.services.ConsumptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,15 @@ public class ConsumptionController {
     @PostMapping
     public Consumption createConsumption(@RequestBody Consumption consumption) {
         return consumptionService.saveConsumption(consumption);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Consumption>> getConsumptionsByUserId(@PathVariable Long userId) {
+        List<Consumption> consumptions = consumptionService.getConsumptionsByUserId(userId);
+        if (consumptions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(consumptions);
     }
 
     @PutMapping("/{id}")
