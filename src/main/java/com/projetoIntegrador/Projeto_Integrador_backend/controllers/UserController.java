@@ -1,11 +1,14 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.controllers;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.UserDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.User;
 import com.projetoIntegrador.Projeto_Integrador_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,8 +18,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUser(){
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUser(){
+        List<User> users = userService.getAllUsers();
+        List<UserDTO> userDTOS  =users.stream() .map(UserDTO::new)  // Converte cada User em UserDTO
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDTOS);
     }
 
     @PostMapping
@@ -30,8 +36,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id){
-        return userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
+         User user = userService.getUserById(id);
+         return ResponseEntity.ok(new UserDTO(user));
     }
 
     @PutMapping("/{id}")

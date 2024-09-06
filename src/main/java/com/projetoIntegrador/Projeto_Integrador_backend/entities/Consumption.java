@@ -1,5 +1,6 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.entities;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.UserDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -59,8 +60,8 @@ public class Consumption {
         this.quantity = quantity;
     }
 
-    public User getUser() {
-        return user;
+    public UserDTO getUser() {
+        return new UserDTO(user);
     }
 
     public void setUser(User user) {
