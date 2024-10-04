@@ -29,6 +29,7 @@ public class User {
         return gastoBasal;
     }
 
+
     public String getSexo() {
         return sexo;
     }
