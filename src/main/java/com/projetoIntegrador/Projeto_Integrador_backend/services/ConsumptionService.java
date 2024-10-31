@@ -1,5 +1,6 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.services;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.FoodDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Consumption;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Food;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.User;
@@ -43,7 +44,7 @@ public class ConsumptionService {
 
         double totalCalories = 0;
         for (Consumption consumption : consumptions) {
-            Food food = consumption.getFood();
+            FoodDTO food = consumption.getFoodDTO();
 
             double calories = food.getCalories() * consumption.getQuantity();
 

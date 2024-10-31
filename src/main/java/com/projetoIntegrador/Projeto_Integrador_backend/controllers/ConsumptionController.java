@@ -1,5 +1,6 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.controllers;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.ConsumptionDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Consumption;
 import com.projetoIntegrador.Projeto_Integrador_backend.services.ConsumptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/consumptions")
@@ -20,13 +22,17 @@ public class ConsumptionController {
     private ConsumptionService consumptionService;
 
     @GetMapping
-    public List<Consumption> getAllConsumptions(){
-        return consumptionService.getAllConsumptions();
+    public List<ConsumptionDTO> getAllConsumptions(){
+        List<Consumption> consumptions = consumptionService.getAllConsumptions();
+        List<ConsumptionDTO> consumptionDTOS = consumptions.stream().map(ConsumptionDTO::transformaConsumptionDTO).collect(Collectors.toList());
+        return consumptionDTOS;
     }
 
     @GetMapping("/{id}")
-    public Optional<Consumption> getConsumptionById(@PathVariable Long id) {
-        return consumptionService.getConsumptionById(id);
+    public List<ConsumptionDTO> getConsumptionById(@PathVariable Long id) {
+        List<Consumption> c = consumptionService.getConsumptionsByUserId(id);
+        List<ConsumptionDTO> cDTO = c.stream().map(ConsumptionDTO::transformaConsumptionDTO).collect(Collectors.toList());
+        return cDTO;
     }
 
     @PostMapping

@@ -1,11 +1,13 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.controllers;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.FoodDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Food;
 import com.projetoIntegrador.Projeto_Integrador_backend.services.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/foods")
@@ -15,13 +17,17 @@ public class FoodController {
     private FoodService foodService;
 
     @GetMapping
-    public List<Food> getAllFoods(){
-        return foodService.getAllFood();
+    public List<FoodDTO> getAllFoods(){
+         List <Food> foods = foodService.getAllFood();
+         List<FoodDTO> foodDTOS = foods.stream().map(FoodDTO::transformaFoodDTO).collect(Collectors.toList());
+         return foodDTOS;
     }
 
     @GetMapping("/{id}")
-    public Food getFoodById (@PathVariable Long id){
-        return foodService.getFoodById(id);
+    public FoodDTO getFoodById (@PathVariable Long id){
+       Food food = foodService.getFoodById(id);
+       FoodDTO foodDTO = FoodDTO.transformaFoodDTO(food);
+       return foodDTO;
     }
 
     @PostMapping

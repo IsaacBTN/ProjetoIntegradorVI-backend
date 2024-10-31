@@ -1,5 +1,6 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.entities;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.FoodDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.UserDTO;
 import jakarta.persistence.*;
 
@@ -17,6 +18,7 @@ public class Consumption {
 
     private double quantity;
 
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -24,6 +26,8 @@ public class Consumption {
     @ManyToOne
     @JoinColumn(name = "food_id",nullable = false)
     private Food food;
+
+
 
     public Consumption(Long id, LocalDateTime consumedAt, double quantity, User user, Food food) {
         this.id = id;
@@ -66,6 +70,10 @@ public class Consumption {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public FoodDTO getFoodDTO() {
+        return FoodDTO.transformaFoodDTO(food);
     }
 
     public Food getFood() {
