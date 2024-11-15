@@ -1,6 +1,8 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.services;
 
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.ConsumptionDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.FoodDTO;
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.UserConsumptionSummaryDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Consumption;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Food;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.User;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsumptionService {
@@ -31,6 +34,21 @@ public class ConsumptionService {
         return consumptionRepository.findAll();
     }
 
+    public UserConsumptionSummaryDTO getUserConsumptionSummary(Long userId) {
+        List<Consumption> consumptions = consumptionRepository.findByUserId(userId);
+
+        double totalCalories = consumptions.stream()
+                .mapToDouble(Consumption::getTotalCalories)
+                .sum();
+
+
+        List<ConsumptionDTO> consumptionDTOs = consumptions.stream()
+                .map(ConsumptionDTO::transformaConsumptionDTO)
+                .collect(Collectors.toList());
+
+        return new UserConsumptionSummaryDTO(consumptionDTOs, totalCalories);
+    }
+
     public List<Consumption> getConsumptionsByUserId(Long userId) {
         return consumptionRepository.findByUserId(userId);
     }
@@ -39,26 +57,16 @@ public class ConsumptionService {
         return consumptionRepository.findById(id);
     }
 
-    public double calculateTotalCaloriesConsumed(Long userId) {
-        List<Consumption> consumptions = consumptionRepository.findByUserId(userId);
-
-        double totalCalories = 0;
-        for (Consumption consumption : consumptions) {
-            FoodDTO food = consumption.getFoodDTO();
-
-            double calories = food.getCalories() * consumption.getQuantity();
-
-            totalCalories += calories;
-        }
-
-        return totalCalories;
-    }
-
     public void deleteConsumpitionById (Long id){
         consumptionRepository.deleteById(id);
     }
 
-    public Consumption saveConsumption (Consumption consumption){
+    public Consumption saveConsumption(Consumption consumption) {
+        User user = userRepository.findById(consumption.getUser().getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Food food = foodRepository.findById(consumption.getFood().getId()).orElseThrow(() -> new RuntimeException("Food not found"));
+        consumption.setUser(user);
+        consumption.setFood(food);
+
         return consumptionRepository.save(consumption);
     }
 

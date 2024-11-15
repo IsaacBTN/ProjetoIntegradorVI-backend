@@ -17,8 +17,6 @@ public class ConsumptionDTO {
 
     private FoodDTO foods;
 
-    private double quantity;
-
     private double caloriaTotal;
 
 
@@ -26,11 +24,12 @@ public class ConsumptionDTO {
         this.id = id;
         this.consumedAt = LocalDateTime.now();
         this.user = user;
-        this.foods = foods;
+        this.foods = food;
 
     }
 
     public static ConsumptionDTO transformaConsumptionDTO(Consumption consumption){
+        double totalCalories = consumption.getTotalCalories();
         return new ConsumptionDTO(consumption.getId(),consumption.getConsumedAt(),consumption.getUser(),consumption.getFoodDTO());
     }
 

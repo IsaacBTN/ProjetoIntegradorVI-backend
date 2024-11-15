@@ -31,13 +31,17 @@ public class Consumption {
 
     public Consumption(Long id, LocalDateTime consumedAt, double quantity, User user, Food food) {
         this.id = id;
-        this.consumedAt = consumedAt;
+        this.consumedAt = LocalDateTime.now();
         this.quantity = quantity;
         this.user = user;
         this.food = food;
     }
 
     public Consumption() {
+    }
+
+    public double getTotalCalories() {
+        return food.getCalories() * quantity;
     }
 
     public Long getId() {

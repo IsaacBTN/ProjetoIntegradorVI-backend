@@ -1,52 +1,55 @@
 package com.projetoIntegrador.Projeto_Integrador_backend.controllers;
 
 import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.ConsumptionDTO;
+import com.projetoIntegrador.Projeto_Integrador_backend.DTOs.UserConsumptionSummaryDTO;
 import com.projetoIntegrador.Projeto_Integrador_backend.entities.Consumption;
 import com.projetoIntegrador.Projeto_Integrador_backend.services.ConsumptionService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/consumptions")
 public class ConsumptionController {
 
+    private final ConsumptionService consumptionService;
+
     @Autowired
-    private ConsumptionService consumptionService;
+    public ConsumptionController(ConsumptionService consumptionService) {
+        this.consumptionService = consumptionService;
+    }
 
     @GetMapping
     public List<ConsumptionDTO> getAllConsumptions(){
         List<Consumption> consumptions = consumptionService.getAllConsumptions();
-        List<ConsumptionDTO> consumptionDTOS = consumptions.stream().map(ConsumptionDTO::transformaConsumptionDTO).collect(Collectors.toList());
-        return consumptionDTOS;
+        return consumptions.stream()
+                .map(ConsumptionDTO::transformaConsumptionDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public List<ConsumptionDTO> getConsumptionById(@PathVariable Long id) {
-        List<Consumption> c = consumptionService.getConsumptionsByUserId(id);
-        List<ConsumptionDTO> cDTO = c.stream().map(ConsumptionDTO::transformaConsumptionDTO).collect(Collectors.toList());
-        return cDTO;
+        List<Consumption> consumptions = consumptionService.getConsumptionsByUserId(id);
+        return consumptions.stream()
+                .map(ConsumptionDTO::transformaConsumptionDTO)
+                .collect(Collectors.toList());
     }
 
+    @Transactional
     @PostMapping
-    public Consumption createConsumption(@RequestBody Consumption consumption) {
-        return consumptionService.saveConsumption(consumption);
+    public ResponseEntity<Consumption> createConsumption(@RequestBody Consumption consumption) {
+        Consumption savedConsumption = consumptionService.saveConsumption(consumption);
+        return ResponseEntity.ok(savedConsumption);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Consumption>> getConsumptionsByUserId(@PathVariable Long userId) {
-        List<Consumption> consumptions = consumptionService.getConsumptionsByUserId(userId);
-        if (consumptions.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(consumptions);
+    public ResponseEntity<UserConsumptionSummaryDTO> getUserConsumptionSummary(@PathVariable Long userId) {
+        UserConsumptionSummaryDTO summary = consumptionService.getUserConsumptionSummary(userId);
+        return ResponseEntity.ok(summary);
     }
 
     @PutMapping("/{id}")
@@ -59,5 +62,3 @@ public class ConsumptionController {
         consumptionService.deleteConsumpitionById(id);
     }
 }
-
-
