@@ -22,6 +22,8 @@ public class User {
     private Double peso;
 
     private Double gastoBasal;
+
+    private Double agua;
     @OneToMany(mappedBy = "user")
     private List<Consumption> consumptions;
 
@@ -32,6 +34,22 @@ public class User {
 
     public String getSexo() {
         return sexo;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setGastoBasal(Double gastoBasal) {
+        this.gastoBasal = gastoBasal;
+    }
+
+    public Double getAgua() {
+        return agua;
+    }
+
+    public void setAgua(Double agua) {
+        this.agua = agua;
     }
 
     public void setPeso(Double peso) {
