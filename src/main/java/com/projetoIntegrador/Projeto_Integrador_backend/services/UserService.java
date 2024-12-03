@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -23,9 +25,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(Long userid){
-        return userRepository.findById(userid).orElse(null);
+    public User getUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado :: " + userId));
     }
+
 
     public void deleteUserById(Long id){
         userRepository.deleteById(id);
@@ -43,5 +47,33 @@ public class UserService {
         user.setEmail(userDetails.getEmail());
 
         return userRepository.save(user);
+    }
+
+    public void setObjetivo(Long userId, int objetivoCaloria, int objetivoAgua) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        user.setObjetivoCaloria(objetivoCaloria);
+        user.setObjetivoAgua(objetivoAgua);
+        userRepository.save(user);
+    }
+
+    public void addWater(Long userId, int waterAmount) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        int updatedWaterConsumption = user.getConsumoAguaAtual() + waterAmount;
+        user.setConsumoAguaAtual(updatedWaterConsumption);
+        userRepository.save(user);
+    }
+
+    public Map<String, Object> getProgress(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        Map<String, Object> progress = new HashMap<>();
+        progress.put("ObjetivoCaloriaDiaria", user.getObjetivoCaloria());
+        progress.put("ObjetivoDeAguaDiario", user.getObjetivoAgua());
+        progress.put("ConsumoDeAguaAtual", user.getConsumoAguaAtual());
+        progress.put("QuantidadeFaltanteDeAgua", user.getObjetivoAgua() - user.getConsumoAguaAtual());
+        return progress;
     }
 }

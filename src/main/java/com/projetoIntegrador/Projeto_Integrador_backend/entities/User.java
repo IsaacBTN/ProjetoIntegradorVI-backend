@@ -21,9 +21,12 @@ public class User {
     private Double altura;
     private Double peso;
 
+    private int ObjetivoCaloria;
+    private int ObjetivoAgua;
+    private int ConsumoAguaAtual = 0;
+
     private Double gastoBasal;
 
-    private Double agua;
     @OneToMany(mappedBy = "user")
     private List<Consumption> consumptions;
 
@@ -44,13 +47,6 @@ public class User {
         this.gastoBasal = gastoBasal;
     }
 
-    public Double getAgua() {
-        return agua;
-    }
-
-    public void setAgua(Double agua) {
-        this.agua = agua;
-    }
 
     public void setPeso(Double peso) {
         this.peso = peso;
@@ -70,6 +66,30 @@ public class User {
     public void setSexo(String sexo) {
         this.sexo = sexo;
         updateGastoBasal();
+    }
+
+    public int getObjetivoCaloria() {
+        return ObjetivoCaloria;
+    }
+
+    public void setObjetivoCaloria(int objetivoCaloria) {
+        ObjetivoCaloria = objetivoCaloria;
+    }
+
+    public int getObjetivoAgua() {
+        return ObjetivoAgua;
+    }
+
+    public void setObjetivoAgua(int objetivoAgua) {
+        ObjetivoAgua = objetivoAgua;
+    }
+
+    public int getConsumoAguaAtual() {
+        return ConsumoAguaAtual;
+    }
+
+    public void setConsumoAguaAtual(int consumoAguaAtual) {
+        ConsumoAguaAtual = consumoAguaAtual;
     }
 
     private void updateGastoBasal() {
